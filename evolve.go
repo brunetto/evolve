@@ -9,49 +9,52 @@ import (
 
 func main () () {
 	var (
+		p *Particle
+		err error
+		
 	)
 
 
 }
 
 
-const BodyFormat string = "%e,%e,%e,%e,%e,%e,%e"
+const ParticleFormat string = "%e,%e,%e,%e,%e,%e,%e"
 
-type Body struct {
+type Particle struct {
 	Mass float64
 	Pos [3]float64 // should they be a slice instead of an array?
 	Vel [3]float64
 }
 
-func (b *Body) ReadFromLine (line string) (err error) {
+func (b *Particle) ReadFromLine (line string) (err error) {
 	// Read data from line
-	if _, err = fmt.Sscanf(line, BodyFormat,
+	if _, err = fmt.Sscanf(line, ParticleFormat,
 		&(b.Mass), &(b.Pos[0]), &(b.Pos[1]), &(b.Pos[2]), &(b.Vel[0]), &(b.Vel[1]), &(b.Vel[2])); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (b *Body) Format () (body string) {
+func (b *Particle) Format () (particle string) {
 	// Read data from line
-	body = fmt.Sprintf(BodyFormat, b.Mass, b.Pos[0], b.Pos[1], b.Pos[2], b.Vel[0], b.Vel[1], b.Vel[2])
-	return body
+	particle = fmt.Sprintf(ParticleFormat, b.Mass, b.Pos[0], b.Pos[1], b.Pos[2], b.Vel[0], b.Vel[1], b.Vel[2])
+	return particle
 }
 
-func (b *Body) Print () () {
+func (b *Particle) Print () () {
 	fmt.Println(b.Format())
 }
 
 
 type System struct {
-	Bodies []*Body
+	Particles []*Particle
 }
 
 func (s *System) LoadFromFile (inFileName string) (err error) {
 	// Read data from file
 	var (
-		bodies = []*Body{}
-		b *Body
+		particles = []*Particle{}
+		p *Particle
 		inFile *os.File
 	)
 	
@@ -60,11 +63,11 @@ func (s *System) LoadFromFile (inFileName string) (err error) {
 	}
 	
 	for {
-		b = &Body{}
-		_, err = fmt.Fscanf(inFile, BodyFormat+"\n",
-			&(b.Mass), 
-			&(b.Pos[0]), &(b.Pos[1]), &(b.Pos[2]), 
-			&(b.Vel[0]), &(b.Vel[1]), &(b.Vel[2]))
+		p = &Particle{}
+		_, err = fmt.Fscanf(inFile, ParticleFormat+"\n",
+			&(p.Mass), 
+			&(p.Pos[0]), &(p.Pos[1]), &(p.Pos[2]), 
+			&(p.Vel[0]), &(p.Vel[1]), &(p.Vel[2]))
 		
 		if err != nil {
 			if err.Error() != "EOF" {
@@ -72,14 +75,14 @@ func (s *System) LoadFromFile (inFileName string) (err error) {
 			}
 			break
 		}
-		bodies = append(bodies, b)
+		particles = append(particles, p)
 	}
-	s.Bodies = bodies
+	s.Particles = particles
 	return nil
 }
 
 func (s *System) Print () () {
-	for _, p := range(s.Bodies) {
+	for _, p := range(s.Particles) {
 		p.Print()
 	}
 }

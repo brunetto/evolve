@@ -4,25 +4,25 @@ import (
 	"testing"
 )
 
-func Test_BodyReadFromLine(t *testing.T){
+func Test_ParticleReadFromLine(t *testing.T){
 	var (
-		b = &Body{}
-		check = &Body{
+		p = &Particle{}
+		check = &Particle{
 					Mass: 1.000000e+01,
 					Pos: [3]float64{2.000000e+02, 3.000000e+03, 4.000000e+04},
 					Vel: [3]float64{5.000000e+05, 6.000000e+06, 7.000000e+07},
 				}
 	)
 	
-	err := b.ReadFromLine("1.000000e+01,2.000000e+02,3.000000e+03,4.000000e+04,5.000000e+05,6.000000e+06,7.000000e+07")
+	err := p.ReadFromLine("1.000000e+01,2.000000e+02,3.000000e+03,4.000000e+04,5.000000e+05,6.000000e+06,7.000000e+07")
 	
 	if err != nil {
 		t.Error("Error reading from line.")
 	}
 		
-	if *b != *check {
+	if *p != *check {
 		t.Errorf("Found difference between: \n%v and \n%v\n", 
-					 b.Format(), check.Format())
+					 p.Format(), check.Format())
 	}
 	
 }
@@ -33,13 +33,13 @@ func Test_SystemLoadFromFile(t *testing.T){
 		err error
 		system = &System{}
 		check = &System{
-			Bodies: []*Body{
-				&Body{
+			Particles: []*Particle{
+				&Particle{
 					Mass: 1.000000e+01,
 					Pos: [3]float64{2.000000e+02, 3.000000e+03, 4.000000e+04},
 					Vel: [3]float64{5.000000e+05, 6.000000e+06, 7.000000e+07},
 				},
-				&Body{
+				&Particle{
 					Mass: 1.000000e+01,
 					Pos: [3]float64{2.000000e+02, -3.000000e+03, 4.000000e+04},
 					Vel: [3]float64{5.000000e+05, 6.000000e+06, 7.000000e+07},
@@ -52,10 +52,10 @@ func Test_SystemLoadFromFile(t *testing.T){
 		t.Error("Error loading bodies: ", err)
 	}
 	
-	for idx,p := range system.Bodies {
-		if *p != *(check.Bodies[idx]) {
+	for idx,p := range system.Particles {
+		if *p != *(check.Particles[idx]) {
 			t.Errorf("At idx %v found difference between: \n%+v and \n%+v\n", 
-					 idx, p.Format(), check.Bodies[idx].Format())
+					 idx, p.Format(), check.Particles[idx].Format())
 		}
 	}
 
