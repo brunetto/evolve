@@ -1,22 +1,12 @@
-package main 
+package evolve 
 
 import (
 	"fmt"
 	"log"
 	"os"
-	
 )
 
-func main () () {
-	var (
-		p *Particle
-		err error
-		
-	)
-
-
-}
-
+const Gmks float64 = 6.67384e-11 // m^3 kg^-1 s^-2
 
 const ParticleFormat string = "%e,%e,%e,%e,%e,%e,%e"
 
@@ -24,27 +14,31 @@ type Particle struct {
 	Mass float64
 	Pos [3]float64 // should they be a slice instead of an array?
 	Vel [3]float64
+	Acc [3]float64
 }
 
-func (b *Particle) ReadFromLine (line string) (err error) {
+func (p *Particle) ReadFromLine (line string) (err error) {
 	// Read data from line
 	if _, err = fmt.Sscanf(line, ParticleFormat,
-		&(b.Mass), &(b.Pos[0]), &(b.Pos[1]), &(b.Pos[2]), &(b.Vel[0]), &(b.Vel[1]), &(b.Vel[2])); err != nil {
+		&(p.Mass), &(p.Pos[0]), &(p.Pos[1]), &(p.Pos[2]), &(p.Vel[0]), &(p.Vel[1]), &(p.Vel[2])); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (b *Particle) Format () (particle string) {
+func (p *Particle) Format () (particle string) {
 	// Read data from line
-	particle = fmt.Sprintf(ParticleFormat, b.Mass, b.Pos[0], b.Pos[1], b.Pos[2], b.Vel[0], b.Vel[1], b.Vel[2])
+	particle = fmt.Sprintf(ParticleFormat, p.Mass, p.Pos[0], p.Pos[1], p.Pos[2], p.Vel[0], p.Vel[1], p.Vel[2])
 	return particle
 }
 
-func (b *Particle) Print () () {
-	fmt.Println(b.Format())
+func (p *Particle) Print () () {
+	fmt.Println(p.Format())
 }
 
+func (p *Particle) PrettyPrint () () {
+	fmt.Printf("Mass:\t%v\nPos:\t%v\nVel:\t%v\n", p.Mass, p.Pos, p.Vel)
+}
 
 type System struct {
 	Particles []*Particle
